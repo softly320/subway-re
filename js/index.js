@@ -1,5 +1,8 @@
 $(document).ready(function () {
 
+    $("a").click(function(e){
+        e.preventDefault();
+    })
 
     const $nav = $(".header .nav ul");
     const $header = $(".header");
@@ -88,10 +91,6 @@ $("a").click(function(e){
     const $event_list = $(".event-list ul li");
     const $event_img = $(".event-img img");
 
-$("a").click(function(e){
-    e.preventDefault();
-})
-
 $event_list.eq(0).addClass("on")
 
 $event_list.click(function(){
@@ -99,6 +98,70 @@ $event_list.click(function(){
     $event_img.attr("src", "images/event"+i+".png")
     $event_list.removeClass("on").eq(i-1).addClass("on")
 })
+
+
+
+
+
+
+//
+
+
+const $sub_menu_slide = $(".subway-menu-content .menu-content")
+const $sub_menu_nav = $(".subway-menu-content ul li")
+
+$sub_menu_slide.eq(0).show()
+$sub_menu_nav.eq(0).addClass("on")
+
+
+const swiper4 = new Swiper(".menu-content",{
+    loop: false,
+    slidesPerView : 2,
+    spaceBetween : 10,
+    grid:{
+        rows: 2
+    },
+    breakpoints:{
+        767:{
+            loop: true,
+    slidesPerView : 4,
+    spaceBetween : 50,
+    grid:{
+        rows: 1
+    }
+        }
+    },
+    navigation:{
+        nextEl :".swiper-button-next",
+        prevEl :".swiper-button-prev"
+    },
+    observer: true,
+    observeParents: true
+})
+
+$sub_menu_nav.click(function(){
+    let i = $(this).index();
+    $sub_menu_nav.removeClass("on").eq(i).addClass("on")
+    $sub_menu_slide.hide().eq(i).show();
+    swiper4[i].slideTo(0,100)
+})
+
+
+
+
+const $tab_nav = $(".subway-sns-content .content-wrap > ul li")
+const $tab_list = $(".subway-sns-content .tab-content")
+
+$tab_list.eq(0).show()
+$tab_nav.eq(0).addClass("on")
+
+$tab_nav.click(function(){
+    let i = $(this).index()
+    $tab_nav.removeClass("on").eq(i).addClass("on")
+    $tab_list.hide().eq(i).show();
+})
+
+
 
 
 
@@ -131,6 +194,68 @@ $(window).scroll(function () {
         $(".floating").hide()
     }
 })
+
+
+
+
+
+
+$(".hamburger i, .m-nav i").click(function(){
+    $(".m-nav").toggleClass("on")
+})
+
+let myswiper = null;
+let ww = $(window).width();
+// console.log(ww)
+function initswiper(){
+    if(ww < 751 && myswiper == null){
+        myswiper = new Swiper(".event-img", {
+            loop: true,
+            pagination:{
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            autoplay: true
+        })
+    }else if(ww > 750 && myswiper != null){
+        myswiper.destroy();
+        myswiper = null;
+    }
+}
+
+let swiper5 = null;
+function initswiper2(){
+    if (ww < 751 && swiper5 == null) {
+        swiper5 = new Swiper(".tab-content",{
+            loop: true,
+            navigation:{
+                nextEl :".swiper-button-next",
+                prevEl :".swiper-button-prev"
+            },
+            pagination:{
+                el: ".swiper-pagination",
+                clickable: true
+            }
+        })
+    } else if(ww > 750 && swiper5 != null){
+        swiper5[0].destroy();
+        swiper5[1].destroy();
+        swiper5[2].destroy();
+        swiper5 = null;
+        $tab_list.eq(idx).show()
+    }
+}
+
+initswiper()
+initswiper2()
+$(window).resize(function(){
+    ww = $(window).width();
+    // console.log(ww)
+    initswiper()
+})
+
+
+
 
 
 }); ///jq
