@@ -8,6 +8,9 @@ $(document).ready(function () {
     const $header = $(".header");
     const $submenu = $(".header .submenu");
     const $navli = $(".header .nav ul li")
+    const $left_list = $(".best-content .best-area ul li")
+    const $center_content = $(".best-content .best-area .center .center-content")
+    const $right_circle = $(".best-content .best-area .right .circle")
 
 $("a").click(function(e){
     e.preventDefault
@@ -114,6 +117,8 @@ $sub_menu_slide.eq(0).show()
 $sub_menu_nav.eq(0).addClass("on")
 
 
+
+
 const swiper4 = new Swiper(".menu-content",{
     loop: false,
     slidesPerView : 2,
@@ -124,20 +129,30 @@ const swiper4 = new Swiper(".menu-content",{
     breakpoints:{
         767:{
             loop: true,
-    slidesPerView : 4,
-    spaceBetween : 50,
-    grid:{
-        rows: 1
-    }
+            slidesPerView : 4,
+            spaceBetween : 50,
+            grid:{
+                rows: 1
+            }
+        },
+        1024:{
+            loop: true,
+            slidesPerView : 4,
+            spaceBetween : 10,
+            grid:{
+                rows: 1
+            }
         }
     },
     navigation:{
         nextEl :".swiper-button-next",
         prevEl :".swiper-button-prev"
     },
+    // 슬라이더가 불러올 때마다 새로고침을 해주는 역할 > display:none > block 변경되었을때 먹통되는걸 방지
     observer: true,
     observeParents: true
 })
+
 
 $sub_menu_nav.click(function(){
     let i = $(this).index();
@@ -145,6 +160,10 @@ $sub_menu_nav.click(function(){
     $sub_menu_slide.hide().eq(i).show();
     swiper4[i].slideTo(0,100)
 })
+
+
+
+
 
 
 
@@ -200,7 +219,7 @@ $(window).scroll(function () {
 
 
 
-$(".hamburger i, .m-nav i").click(function(){
+$(".hamburger i, .m-nav > i").click(function(){
     $(".m-nav").toggleClass("on")
 })
 
@@ -246,13 +265,83 @@ function initswiper2(){
     }
 }
 
+let swiper6 = null;
+function initswiper3(){
+    if(ww < 751 && swiper6 == null){
+        swiper6 = new Swiper(".right", {
+            loop: true,
+            pagination:{
+                el: ".swiper-pagination",
+                clickable: true
+            },
+            navigation:{
+                nextEl :".swiper-button-next",
+                prevEl :".swiper-button-prev"
+            }
+        })
+    $right_circle.addClass("on");
+    $left_list.removeClass("on").eq(0).addClass("on")
+    $center_content.hide().eq(0).show()
+    swiper6.slideTo(swiper6.realIndex+1);
+        swiper6.on("slideChange", function(){
+            $center_content.hide().eq(swiper6.realIndex).show();
+            $left_list.removeClass("on").eq(swiper6.realIndex).addClass("on")
+        })
+    }else if(ww > 750 && swiper6 != null){
+    $right_circle.removeClass("on").eq(swiper6.realIndex).addClass("on")
+        swiper6.destroy();
+        swiper6 = null;
+    }
+}
+
 initswiper()
 initswiper2()
+initswiper3()
 $(window).resize(function(){
     ww = $(window).width();
     // console.log(ww)
     initswiper()
+    initswiper2()
+    initswiper3()
 })
+
+
+
+
+
+let prev = -1;
+const $m_nav = $(".m-nav .menu > ul > li");
+
+$m_nav.click(function(){
+    let i = $(this).index()
+    const ul_height = $(this).find("ul li").length * 50+"px";
+
+
+    $m_nav.removeClass("on")
+    if(prev == i){
+        $(this).removeClass("on")
+        $m_nav.find("ul").css("height", "")
+        prev = -1;
+    }else{
+        $(this).toggleClass("on")
+        $m_nav.find("ul").css("height", "")
+        $m_nav.eq(i).find("ul").css("height", ul_height)
+        prev = i;
+    }
+
+})
+
+
+
+$right_circle.eq(0).addClass("on")
+    $left_list.eq(0).addClass("on")
+    $left_list.click(function(e){
+        e.preventDefault();
+        let i = $(this).index()
+        $left_list.removeClass("on").eq(i).addClass("on")
+        $center_content.hide().eq(i).show();
+    $right_circle.removeClass("on").eq(i).addClass("on")
+    })
 
 
 
